@@ -1,0 +1,118 @@
+apply plugin: 'com.android.application'
+
+def getVersionName(){
+
+}
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.xiaoxiao.test"
+        minSdkVersion 15
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        manifestPlaceholders = [ UMENG_CHANNEL_VALUE: "inner"];
+    }
+    signingConfigs {
+        release{
+            storeFile file('xiaoxiao.keystore')
+            storePassword "123456"
+            keyAlias "xiaoxiao"
+            keyPassword "123456"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main{
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    lintOptions{
+        disable "MissingTranslation"
+    }
+
+    //渠道Flavors，我这里写了一些常用的
+    productFlavors {
+        inner {}
+//        xcyo {}
+//        wandoujia {}
+//        anzhi {}
+//        qihu360 {}
+//        baidu {}
+//        xiaomi {}
+//        nduoa {}
+    }
+
+    productFlavors.all { flavor ->
+        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
+
+    //
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def oldFile = output.outputFile
+            if (variant.buildType.name.equals('release')){
+                def releaseApkName = '应用名称-' + variant.productFlavors[0].name + '-' + defaultConfig.versionName + '.apk'
+                output.outputFile = new File(oldFile.parent,releaseApkName)
+            }
+            if ("${variant.dirName}".contains("debug")) {
+
+                output.processManifest.doLast {
+                    def manifestOutFile = output.processManifest.manifestOutputFile
+
+                    def activities = manifestOutFile.getText('UTF-8').split("<activity")
+                    def newFileContents = ""
+
+                    for (def activity : activities) {
+                        if (!activity.contains("<manifest")) {
+                            if (activity.contains("exported")) {
+                                activity = activity.replace("android:exported=\"false\"", "android:exported=\"true\"")
+                            }
+                            else {
+                                activity = "\n            android:exported=\"true\"" + activity
+                            }
+                        }
+
+                        newFileContents = newFileContents + activity
+                        if (!activity.contains("</manifest>")) {
+                            newFileContents = newFileContents + "<activity"
+                        }
+                    }
+
+                    manifestOutFile.write(newFileContents, 'UTF-8')
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.0'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    //    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+    compile 'me.grantland:autofittextview:0.2.+'
+    compile project(':baselib')
+    compile 'com.qiniu:qiniu-android-sdk:7.1.2'
+    compile 'in.srain.cube:ultra-ptr:1.0.11'
+    compile project(':ijkplayer-sample')
+}
+
+// 启动android:exported="true"的Activity
+task startExportedTestActivity(type: Exec, dependsOn: 'installDebug') {
+    commandLine 'cmd', '/c', 'adb', 'shell', 'am', 'start', '-n', 'com.xcyo.yoyo/com.xcyo.yoyo.activity.about.TestActivity'
+}
