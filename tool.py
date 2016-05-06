@@ -10,6 +10,7 @@ import datetime
 androidRoot = "/data/work/yoyo/android_new/"  #项目根目录
 androidResPath = os.path.join(androidRoot,"app/src/main/res")   #资源目录  
 gradleFilePath = os.path.join(androidRoot,"build.gradle")  #项目build.gradle文件路径
+appGradleFilePath = os.path.join(androidRoot,"app/build.gradle")  #项目主build.gradle路径
 configPath = os.path.dirname(os.path.abspath(sys.argv[0]))  #配置目录
 versionConfigPath = os.path.join(configPath,"version.config")  #各个版本配置文件路径
 
@@ -91,6 +92,8 @@ def buildApk(args):
 	else:
 		showErrorAndExit("miss versionCode[%s]'s config" %args.versionCode)
 
+	#备份下app下面的build.gradle文件
+	executeCmd("cp %s %s" %(appGradleFilePath,configPath))	
 	#处理srctag、restag
 	handleGit(androidRoot,srcTag)
 	handleGit(androidResPath,resTag)	
@@ -98,7 +101,8 @@ def buildApk(args):
 	replaceLines(gradleFilePath, "\(.*\)versionCode \(.*\)", "    versionCode = " + str(args.versionCode))
 	#修改versionName
 	replaceLines(gradleFilePath, "\(.*\)versionName \(.*\)", "    versionName = \"" + str(versionName) + "\"")
-
+	#替换app下面的build.gradle文件
+	executeCmd("cp %s %s" %(os.path.join(configPath,"build.gradle"),os.path.join(androidRoot,"app")))	
 	#打包
 	executeCmd("cd %s && gradle assembleRelease" %androidRoot)
 	#更新安装包
