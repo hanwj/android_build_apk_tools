@@ -8,7 +8,7 @@ import subprocess
 import datetime
 
 androidRoot = "/data/work/yoyo/android_new/"  #项目根目录
-androidResPath = os.path.join(androidRoot,"app/src/main/res")   #资源目录  
+#androidResPath = os.path.join(androidRoot,"app/src/main/res")   #资源目录  
 gradleFilePath = os.path.join(androidRoot,"build.gradle")  #项目build.gradle文件路径
 appGradleFilePath = os.path.join(androidRoot,"app/build.gradle")  #项目主build.gradle路径
 configPath = os.path.dirname(os.path.abspath(sys.argv[0]))  #配置目录
@@ -75,7 +75,7 @@ def buildApk(args):
 	versionCode = ""
 	versionName = ""
 	srcTag = ""
-	resTag = ""
+	#resTag = ""
 	if args.versionCode:
 		versionCode = args.versionCode
 	else:
@@ -88,7 +88,7 @@ def buildApk(args):
 		print "versionConfig : " + " ".join(versionConfig)
 		versionName = versionConfig[1]
 		srcTag = versionConfig[2]
-		resTag = versionConfig[3]
+		#resTag = versionConfig[3]
 	else:
 		showErrorAndExit("miss versionCode[%s]'s config" %args.versionCode)
 
@@ -96,7 +96,7 @@ def buildApk(args):
 	executeCmd("cp %s %s" %(appGradleFilePath,configPath))	
 	#处理srctag、restag
 	handleGit(androidRoot,srcTag)
-	handleGit(androidResPath,resTag)	
+	#handleGit(androidResPath,resTag)	
 	#修改versionCode
 	replaceLines(gradleFilePath, "\(.*\)versionCode \(.*\)", "    versionCode = " + str(args.versionCode))
 	#修改versionName
@@ -116,6 +116,5 @@ if args.action == "apk":
 	buildApk(args)
 elif args.action == "tag":
 	srcTag = createTag(androidRoot)
-	resTag = createTag(androidResPath)
-	print "srcTag    resTag"
-	print srcTag + "    " + resTag
+	#resTag = createTag(androidResPath)
+	print "srcTag : " + srcTag
