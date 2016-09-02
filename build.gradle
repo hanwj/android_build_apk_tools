@@ -30,13 +30,15 @@ ext {
     versionName = "1.0.0"       //版本显示号
     //渠道名
     productFlavors = {
-        inner {}
-        xcyo {}
-        //wandoujia {}
-        //anzhi {}
-        //qihu360 {}
-        //baidu {}
-        //xiaomi {}
-        //nduoa {}
+        //inner {}
+       xcyo {}
+       wandoujia {}
+       anzhi {}
+       qihu360 {}
+       baidu {}
+       xiaomi {}
+       nduoa {}
+       kuchuan {}
+       // jizhihui {}
     }
 }
