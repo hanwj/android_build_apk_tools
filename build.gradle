@@ -25,20 +25,22 @@ task clean(type: Delete) {
 ext {
     compileSdkVersion = 23       // depending on your sdk version
     buildToolsVersion = "23.0.2" // depending on your build tools version
-    targetSdkVersion = 23        // depending on your sdk version
+    targetSdkVersion = 22        // depending on your sdk version
     versionCode = 1              //版本号
     versionName = "1.0.0"       //版本显示号
     //渠道名
     productFlavors = {
-        //inner {}
-       xcyo {}
+       //inner {}
+       //xcyo {}
        wandoujia {}
        anzhi {}
        qihu360 {}
        baidu {}
        xiaomi {}
-       nduoa {}
+       //nduoa {}
        kuchuan {}
-       // jizhihui {}
+       //jizhihui {}
+       //youyuan {}
+	   qq {}
     }
 }

@@ -8,6 +8,7 @@ import subprocess
 import datetime
 
 androidRoot = "/data/work/yoyo/android_new/"  #项目根目录
+urlFilePath = "app/src/main/java/com/xcyo/yoyo/server/ServerRegister.java"
 #androidResPath = os.path.join(androidRoot,"app/src/main/res")   #资源目录  
 gradleFilePath = os.path.join(androidRoot,"build.gradle")  #项目build.gradle文件路径
 appGradleFilePath = os.path.join(androidRoot,"build.gradle")  #项目主build.gradle路径
@@ -103,6 +104,8 @@ def buildApk(args):
 	replaceLines(gradleFilePath, "\(.*\)versionCode \(.*\)", "    versionCode = " + str(args.versionCode))
 	#修改versionName
 	replaceLines(gradleFilePath, "\(.*\)versionName \(.*\)", "    versionName = \"" + str(versionName) + "\"")
+	#修改url
+	replaceLines(os.path.join(androidRoot,urlFilePath),"http:\\/\\/\(.*\).xcyo.com\\/app","http:\\/\\/www.xcyo.com\\/app")
 	#打包
 	executeCmd("cd %s && gradle assembleRelease" %androidRoot)
 	#更新安装包
