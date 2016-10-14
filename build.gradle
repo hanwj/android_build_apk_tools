@@ -32,15 +32,17 @@ ext {
     productFlavors = {
        //inner {}
        //xcyo {}
-       wandoujia {}
-       anzhi {}
-       qihu360 {}
-       baidu {}
-       xiaomi {}
+       //wandoujia {}
+       //anzhi {}
+       //qihu360 {}
+       //baidu {}
+       //xiaomi {}
        //nduoa {}
-       kuchuan {}
+       //kuchuan {}
        //jizhihui {}
        //youyuan {}
-	   qq {}
+	     //qq {}
+       xiaoyun {}
+       sougou {}
     }
 }

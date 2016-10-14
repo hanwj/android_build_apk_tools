@@ -105,9 +105,9 @@ def buildApk(args):
 	#修改versionName
 	replaceLines(gradleFilePath, "\(.*\)versionName \(.*\)", "    versionName = \"" + str(versionName) + "\"")
 	#修改url
-	replaceLines(os.path.join(androidRoot,urlFilePath),"http:\\/\\/\(.*\).xcyo.com\\/app","http:\\/\\/www.xcyo.com\\/app")
+	replaceLines(os.path.join(androidRoot,urlFilePath),"http:\\/\\/\(.*\)\\/app","http:\\/\\/www.xcyo.com\\/app")
 	#打包
-	executeCmd("cd %s && gradle assembleRelease" %androidRoot)
+	executeCmd("cd %s && gradle clean && gradle assembleRelease" %androidRoot)
 	#更新安装包
 
 parser = argparse.ArgumentParser()
