@@ -1,5 +1,7 @@
 #!/usr/bin
 #coding=utf-8
+# ******** android studio结合git批量打包工具 ********
+# ******** 每个包对应唯一的tag，所以对于以后版本回退、打历史包都可以 ********
 import os
 import sys
 import re

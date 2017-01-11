@@ -1,5 +1,6 @@
 #!usr/bin
 #coding=utf-8
+# ********* flash文件批量导成lwf文件 *********
 import os
 import sys
 import shutil

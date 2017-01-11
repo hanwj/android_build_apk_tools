@@ -1,5 +1,6 @@
 #!/usr/bin/python
-
+# ******** 使用pngquant批量压缩图片 ********
+# ******** 减少图片资源且图片效果变化不大 ********
 import os
 import sys
 import re
