@@ -109,7 +109,7 @@ def buildApk(args):
 	#修改url
 	replaceLines(os.path.join(androidRoot,urlFilePath),"http:\\/\\/\(.*\)\\/app","请求的url")
 	#打包
-	executeCmd("cd %s && gradle clean && gradle assembleRelease" %androidRoot)
+	executeCmd("cd %s && ./gradlew clean && ./gradlew assembleRelease" %androidRoot)
 	#更新安装包
 
 parser = argparse.ArgumentParser()

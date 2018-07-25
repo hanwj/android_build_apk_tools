@@ -6,8 +6,8 @@ import sys
 import shutil
 
 lwfToolsPath = "/Users/meibo-design/Desktop/lwf/lwfs-20141201-1830/lib/swf2lwf/swf2lwf.rb"
-animFileDir = "/data/work/yoyo/秀场/美术/改版后手机礼物/礼物源文件"   #动画目录
-outputDir = "/data/work/yoyo/秀场/美术/改版后手机礼物/礼物输出"  #输出目录
+animFileDir = "/data/work/yoyo/秀场/美术/改版后手机礼物/礼物源文件2"   #动画目录
+outputDir = "/data/work/yoyo/秀场/美术/改版后手机礼物/输出"  #输出目录
 # outputDir = "/data/yoyolwf"  #输出目录
 animList = []   #动画文件
 warnMsg = "***********warning************\n"
@@ -67,7 +67,7 @@ for name in animList:
 	else:
 		warn("anim " + name + " miss lwf file")
 
-batchZip(outputDir)
+#batchZip(outputDir)
 executeCmd("open " + os.path.join(outputDir))
 print warnMsg
 print "end"
