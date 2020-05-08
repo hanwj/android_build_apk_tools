@@ -32,3 +32,6 @@ def testStack():
 		print False
 
 testStack()
+
+output = subprocess.check_output("ls")
+print output

@@ -1,5 +1,7 @@
 #!/usr/bin
 #coding=utf-8
+# ******** android studio结合git批量打包工具 ********
+# ******** 每个包对应唯一的tag，所以对于以后版本回退、打历史包都可以 ********
 import os
 import sys
 import re
@@ -105,9 +107,9 @@ def buildApk(args):
 	#修改versionName
 	replaceLines(gradleFilePath, "\(.*\)versionName \(.*\)", "    versionName = \"" + str(versionName) + "\"")
 	#修改url
-	replaceLines(os.path.join(androidRoot,urlFilePath),"http:\\/\\/\(.*\)\\/app","http:\\/\\/www.xcyo.com\\/app")
+	replaceLines(os.path.join(androidRoot,urlFilePath),"http:\\/\\/\(.*\)\\/app","请求的url")
 	#打包
-	executeCmd("cd %s && gradle clean && gradle assembleRelease" %androidRoot)
+	executeCmd("cd %s && ./gradlew clean && ./gradlew assembleRelease" %androidRoot)
 	#更新安装包
 
 parser = argparse.ArgumentParser()
