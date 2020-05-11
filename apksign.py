@@ -1,11 +1,16 @@
 #!/usr/bin
-#coding=utf-8
+# coding=utf-8
+# @Author:caixiaoxiao
+# @Time:20200508
+# @FileName:apksign.py
+# @Desc:apk重新签名；使用VasDolly批量打渠道包
+
 import os
 import sys
 import getopt
 
-signPath = "C:\\Users\\caixiaoxiao\\Desktop\\xxxxx\\sign"
-vasDollyPath = "F:\\project\\VasDolly\\command\\jar\\VasDolly.jar"
+signPath = "/data/work/android/sign"
+vasDollyPath = "/data/work/android/VasDolly/command/jar/VasDolly.jar"
 apkSignCmdFormat = "jarsigner -verbose -keystore {} -storepass {} -signedjar {} {} {}"
 keystoreFilePath = os.path.join(signPath,"build.properties")
 outputPath = os.path.join(signPath,"output")
