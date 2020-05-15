@@ -8,14 +8,18 @@
 import os
 import sys
 import getopt
+import subprocess
+import re
 
-signPath = "/data/work/android/sign"
-vasDollyPath = "/data/work/android/VasDolly/command/jar/VasDolly.jar"
+aapt = "/Applications/android/sdk/build-tools/28.0.2/aapt" #aapt路径
+signPath = "/data/work/android/sign" #签名文件目录
+vasDollyPath = "/data/work/android/VasDolly/command/jar/VasDolly.jar" #多渠道命令路径
 apkSignCmdFormat = "jarsigner -verbose -keystore {} -storepass {} -signedjar {} {} {}"
-keystoreFilePath = os.path.join(signPath,"build.properties")
-outputPath = os.path.join(signPath,"output")
+keystoreFilePath = os.path.join(signPath,"build.properties") #签名文件配置
+outputPath = os.path.join(signPath,"output") #默认输出目录
+apk_prefix = "virgo_aph" #apk前缀
 
-
+#执行cmd
 def executeCmd(cmd):
 	print "executeCmd: " + cmd
 	os.system(cmd)
@@ -34,6 +38,17 @@ def getKeystoreConfig(path):
 	print properties
 	return properties
 
+#获取apk版本号
+def getApkVersionName(apkFile):
+	cmd = "%s dump badging %s | grep 'versionName'" %(aapt,apkFile)
+	output = subprocess.check_output(cmd,shell=True)
+	print"output:" + output
+	pattern = re.compile(r" versionName=\'([0-9.]+)\'")
+	result = pattern.search(output)
+	if result:
+		return result.group(1)
+	else:
+		return 'x.x.x'
 
 try:
 	opts,args = getopt.getopt(sys.argv[1:],"hi:o:c:")	
@@ -69,12 +84,13 @@ if not os.path.isdir(outputPath):
 	print "makedir:%s" %outputPath
 	os.makedirs(outputPath)
 
-apkName = os.path.basename(intputfile)
-print "apk's name : " + apkName	
+apkVersionName = getApkVersionName(intputfile)
+apkBaseName = "%s_%s" %(apk_prefix,apkVersionName)
+print "apk's name : %s" %(apkBaseName)
 
 #重新签名
 keystoreConfig = getKeystoreConfig(keystoreFilePath)
-signApkPath = os.path.join(outputPath,"sign-" + apkName)
+signApkPath = os.path.join(outputPath,apkBaseName + "_signed.apk")
 signCmd = apkSignCmdFormat.format(os.path.join(signPath,keystoreConfig["key.store"]),
 	keystoreConfig["key.store.password"],
 	signApkPath,
@@ -86,6 +102,12 @@ executeCmd("cd %s && %s" %(signPath,signCmd))
 if channels:
 	print"channels:" + channels
 	executeCmd("java -jar %s put -c \"%s\" -f %s %s" %(vasDollyPath,channels,signApkPath,outputPath))
+	#重命名[app名称_版本号_渠道号]
+	channelList = channels.split(",")
+	for channel in channelList:
+		outputApkName = channel + "-" + apkBaseName + "_signed.apk"
+		modifiedtyApkName = apkBaseName + "_" + channel + ".apk"
+		executeCmd("mv %s %s" %(os.path.join(outputPath,outputApkName),os.path.join(outputPath,modifiedtyApkName)))
 
 #打开输出目录
 print "=========================="
