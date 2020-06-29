@@ -17,7 +17,7 @@ vasDollyPath = "/data/work/android/VasDolly/command/jar/VasDolly.jar" #多渠道
 apkSignCmdFormat = "jarsigner -verbose -keystore {} -storepass {} -signedjar {} {} {}"
 keystoreFilePath = os.path.join(signPath,"build.properties") #签名文件配置
 outputPath = os.path.join(signPath,"output") #默认输出目录
-apk_prefix = "virgo_aph" #apk前缀
+apk_prefix = "virgox_aph" #apk前缀
 
 #执行cmd
 def executeCmd(cmd):
@@ -79,6 +79,7 @@ if not intputfile:
 	print "apksign.py -i <intputfile> -o <outputPath> -c <channels>"
 	sys.exit()
 
+outputPath = os.path.abspath(outputPath)
 #检查输入目录是否存在，不存在则创建
 if not os.path.isdir(outputPath):
 	print "makedir:%s" %outputPath
