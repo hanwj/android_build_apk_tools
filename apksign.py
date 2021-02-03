@@ -4,6 +4,18 @@
 # @Time:20200508
 # @FileName:apksign.py
 # @Desc:apk重新签名；使用VasDolly批量打渠道包
+# 
+# ********************** READ ME ********************
+# python apksign.py -i <待签名apk> -o <输出目录> -c <渠道名>
+# 示例：
+# 1.加固apk: 
+#	python apksign.py -i /data/work/virgoX.apk
+# 2.加固并生成渠道包12和23: 
+#	python apksign.py -i /data/work/virgoX.apk -c '12,23'
+# 3.重定向输出目录: 
+#	python apksign.py -i /data/work/virgoX.apk -o /data/work/output/
+# ********************** READ ME ********************
+
 
 import os
 import sys
@@ -14,10 +26,11 @@ import re
 aapt = "/Applications/android/sdk/build-tools/28.0.2/aapt" #aapt路径
 signPath = "/data/work/android/sign" #签名文件目录
 vasDollyPath = "/data/work/android/VasDolly/command/jar/VasDolly.jar" #多渠道命令路径
-apkSignCmdFormat = "jarsigner -verbose -keystore {} -storepass {} -signedjar {} {} {}"
+# apkSignCmdFormat = "jarsigner -verbose -keystore {} -storepass {} -sigfile CERT -signedjar {} {} {}"
+apkSignCmdFormat = "/Applications/android/sdk/build-tools/28.0.1/apksigner sign --ks {} --ks-pass pass:{} --ks-key-alias {} --key-pass pass:{} --out {} {}"
 keystoreFilePath = os.path.join(signPath,"build.properties") #签名文件配置
 outputPath = os.path.join(signPath,"output") #默认输出目录
-apk_prefix = "virgox_aph" #apk前缀
+apk_prefix = "pptv_aph" #apk前缀
 
 #执行cmd
 def executeCmd(cmd):
@@ -94,15 +107,16 @@ keystoreConfig = getKeystoreConfig(keystoreFilePath)
 signApkPath = os.path.join(outputPath,apkBaseName + "_signed.apk")
 signCmd = apkSignCmdFormat.format(os.path.join(signPath,keystoreConfig["key.store"]),
 	keystoreConfig["key.store.password"],
+	keystoreConfig["key.alias"],
+	keystoreConfig["key.alias.password"],
 	signApkPath,
-	intputfile,
-	keystoreConfig["key.alias"])
+	intputfile)
 executeCmd("cd %s && %s" %(signPath,signCmd))
 
 #打渠道号标记
 if channels:
 	print"channels:" + channels
-	executeCmd("java -jar %s put -c \"%s\" -f %s %s" %(vasDollyPath,channels,signApkPath,outputPath))
+	executeCmd("java -jar %s put -c \"%s\" %s %s" %(vasDollyPath,channels,signApkPath,outputPath))
 	#重命名[app名称_版本号_渠道号]
 	channelList = channels.split(",")
 	for channel in channelList:
