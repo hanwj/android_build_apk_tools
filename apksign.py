@@ -27,7 +27,7 @@ aapt = "/Applications/android/sdk/build-tools/28.0.2/aapt" #aapt路径
 signPath = "/data/work/android/sign" #签名文件目录
 vasDollyPath = "/data/work/android/VasDolly/command/jar/VasDolly.jar" #多渠道命令路径
 # apkSignCmdFormat = "jarsigner -verbose -keystore {} -storepass {} -sigfile CERT -signedjar {} {} {}"
-apkSignCmdFormat = "/Applications/android/sdk/build-tools/28.0.1/apksigner sign --ks {} --ks-pass pass:{} --ks-key-alias {} --key-pass pass:{} --out {} {}"
+apkSignCmdFormat = "/Applications/android/sdk/build-tools/28.0.1/apksigner sign --ks {} --ks-pass pass:{} --ks-key-alias {} --key-pass pass:{} --out {} '{}'"
 keystoreFilePath = os.path.join(signPath,"build.properties") #签名文件配置
 outputPath = os.path.join(signPath,"output") #默认输出目录
 apk_prefix = "pptv_aph" #apk前缀
@@ -53,7 +53,7 @@ def getKeystoreConfig(path):
 
 #获取apk版本号
 def getApkVersionName(apkFile):
-	cmd = "%s dump badging %s | grep 'versionName'" %(aapt,apkFile)
+	cmd = "%s dump badging '%s' | grep 'versionName'" %(aapt,apkFile)
 	output = subprocess.check_output(cmd,shell=True)
 	print"output:" + output
 	pattern = re.compile(r" versionName=\'([0-9.]+)\'")
